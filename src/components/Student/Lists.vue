@@ -1,5 +1,18 @@
 <script setup>
+import { onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
+import useStudent from '@/composables/studentsapi';
+
+const { getStudents, destroyStudent, studentData, errors } = useStudent();
+onMounted(() => {
+   getStudents()
+});
+const deleteStudent = async (id) => {
+   if (confirm('Are you sure to delete?')) {
+      await destroyStudent(id);
+      await getStudents();
+   }
+}
 </script>
 <template>
    <div class="container py-5">
@@ -23,18 +36,19 @@ import { RouterLink } from 'vue-router';
                            </tr>
                         </thead>
                         <tbody>
-                           <tr>
-                              <th scope="row">1</th>
-                              <td>Mark</td>
-                              <td>Otto</td>
+                           <tr v-for="({ id, name, email }, index) in studentData" :key="id">
+                              <th scope="row">{{ index + 1 }}</th>
+                              <td>{{ name }}</td>
+                              <td>{{ email }}</td>
                               <td>
-                                 <button class="btn btn-warning">
+                                 <RouterLink :to="{ name: 'ShowStudent', params: { id: id } }" class="btn btn-warning">
                                     <i class="bi bi-eye"></i>
-                                 </button>
-                                 <button class="btn btn-primary mx-2">
+                                 </RouterLink>
+                                 <RouterLink :to="{ name: 'EditStudent', params: { id: id } }"
+                                    class="btn btn-primary mx-2">
                                     <i class="bi bi-pencil-square"></i>
-                                 </button>
-                                 <button class="btn btn-danger">
+                                 </RouterLink>
+                                 <button class="btn btn-danger" @click="deleteStudent(id)">
                                     <i class="bi bi-trash"></i>
                                  </button>
                               </td>

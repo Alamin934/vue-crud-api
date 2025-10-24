@@ -10,7 +10,7 @@ export const router = createRouter({
    routes: [
       {
          path: "/",
-         name: "students",
+         name: "Students",
          component: Lists,
       },
       {
@@ -19,12 +19,12 @@ export const router = createRouter({
          component: Add
       },
       {
-         path: "/student/edit:id",
+         path: "/student/edit/:id",
          name: "EditStudent",
          component: Edit
       },
       {
-         path: "/student/show:id",
+         path: "/student/show/:id",
          name: "ShowStudent",
          component: Show
       },
