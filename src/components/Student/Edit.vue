@@ -3,23 +3,16 @@ import { onMounted, reactive } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import useStudent from '@/composables/studentsapi';
 
-const { updateStudent, getSingleStudent, studentData, successMsg } = useStudent();
+const { updateStudent, getSingleStudent, studentData, successMsg, errors } = useStudent();
 const route = useRoute();
-const formData = reactive({
-   id: "",
-   name: "",
-   email: ""
-});
+
 const updateForm = async () => {
-   console.log(formData)
-   // if (formData.name !== "" && formData.email !== "") {
-   //    await updateStudent(formData);
-   //    formData.name = "";
-   //    formData.email = "";
-   // }
+   if (studentData.value.name !== "" && studentData.value.email !== "") {
+      await updateStudent(route.params.id, studentData.value);
+   }
 }
-onMounted(() => {
-   getSingleStudent(route.params.id);
+onMounted(async () => {
+   await getSingleStudent(route.params.id);
 });
 </script>
 <template>
@@ -36,22 +29,19 @@ onMounted(() => {
                   <div class="my-4">
                      <form @submit.prevent="updateForm">
                         <div class="mb-3">
-                           <label for="" class="form-label">Id</label>
-                           <input type="text" class="form-control" :value="studentData.id"
-                              @input="formData.id = $event.target.value">
+                           <input type="hidden" disabled class="form-control" v-model="studentData.id">
                         </div>
                         <div class="mb-3">
                            <label for="" class="form-label">Enter name</label>
-                           <input type="text" @input="formData.name = $event.target.value" :value="studentData.name"
-                              class="form-control">
+                           <input type="text" v-model="studentData.name" class="form-control">
                         </div>
                         <div class="mb-3">
                            <label for="" class="form-label">Enter email</label>
-                           <input type="email" @input="formData.email = $event.target.value" :value="studentData.email"
-                              class="form-control">
+                           <input type="email" v-model="studentData.email" class="form-control">
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                      </form>
+                     <p class="text-success">{{ successMsg }}</p>
                      <p class="text-success">{{ successMsg }}</p>
                   </div>
                </div>

@@ -49,6 +49,27 @@ export default function useStudent() {
       }
    }
 
+   const updateStudent = async (id, data) => {
+      studentData.value = [];
+      errors.value = null;
+      successMsg.value = "";
+      try {
+         const res = await axios({
+            method: 'PUT',
+            url: url + id,
+            data: data,
+            headers: {
+               'Content-Type': 'application/json'
+            }
+         });
+         studentData.value = res.data;
+         if (res.status === 200) {
+            successMsg.value = "Student updated successfully!";
+         }
+      } catch (err) {
+         errors.value = err;
+      }
+   }
    const destroyStudent = async (id) => {
       studentData.value = [];
       errors.value = null;
@@ -66,6 +87,6 @@ export default function useStudent() {
       }
    }
 
-   return { getStudents, addStudent, getSingleStudent, destroyStudent, studentData, errors, successMsg };
+   return { getStudents, addStudent, getSingleStudent, updateStudent, destroyStudent, studentData, errors, successMsg };
 
 }
